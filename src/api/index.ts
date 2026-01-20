@@ -22,7 +22,7 @@ AuthApi.interceptors.request.use(
     const token = useAuthStore.getState().token;
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;      
     }
     return config;
   },
@@ -64,6 +64,20 @@ AuthApi.interceptors.response.use(
         return Promise.reject(error);
       }
     }
+    return Promise.reject(error);
+  }
+);
+
+ImageApi.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;      
+    }
+    return config;
+  },
+  (error) => {
     return Promise.reject(error);
   }
 );
