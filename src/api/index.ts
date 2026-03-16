@@ -42,7 +42,7 @@ AuthApi.interceptors.response.use(
 
       try {
         // refresh token 으로 access token 재발급
-        const response = await AuthApi.get("/api/v1/auth/refresh");
+        const response = await AuthApi.get("/api/auth/refresh");
 
         const newAccessToken = response.data.accessToken;
         const email = response.data.email;

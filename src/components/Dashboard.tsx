@@ -317,7 +317,9 @@ export default function Dashboard() {
                   <div className="text-right text-blue-600">
                     <p>마지막 업데이트</p>
                     <p>
-                      {format(lastUploadedAt as Date, "yyyy년 MM월 dd일 HH:mm")}
+                      {lastUploadedAt
+                        ? format(new Date(lastUploadedAt), "yyyy년 MM월 dd일 HH:mm")
+                        : "-"}
                     </p>
                   </div>
                 </div>

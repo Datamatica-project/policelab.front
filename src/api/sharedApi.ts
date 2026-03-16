@@ -25,7 +25,7 @@ export const getSharedFiles = async (email: string) => {
 };
 
 export const getUserList = async () => {
-  const response = await AuthApi.get(`/api/v1/auth/users`);
+  const response = await AuthApi.get(`/api/auth/users`);
   return response.data;
 };
 

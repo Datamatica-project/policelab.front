@@ -21,7 +21,14 @@ export default function SharedGallery() {
   }, [refreshKey]);
   return (
     <>
-      {isempty ? (
+      {(
+        <SharedFiles
+          sharedFiles={sharedFiles}
+          setSharedFiles={setSharedFiles}
+          setRefreshKey={setRefreshKey}
+        />
+      )}
+      {/* {isempty ? (
         <Card className="border-blue-200">
           <CardContent className="text-center py-12">
             <Users className="mx-auto h-12 w-12 text-blue-400 mb-4" />
@@ -37,7 +44,7 @@ export default function SharedGallery() {
           setSharedFiles={setSharedFiles}
           setRefreshKey={setRefreshKey}
         />
-      )}
+      )} */}
     </>
   );
 }
