@@ -24,6 +24,7 @@ import {
 import { Button } from "../ui/button";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PostMosaic } from "@/api/mosaicApi";
+import { ImageApi } from "@/api/index";
 import { toast } from "sonner";
 import KonvaBoundingBoxLayer from "../KonvaBoundingBoxLayer";
 import { zipFiles } from "@/api/uploadApi";
@@ -149,31 +150,14 @@ export default function UploadModal({
         uploadedFiles.map(async (fileItem, index) => {
           if (!fileItem.storageUrl) return;
 
-          try {
-            const response = await fetch(fileItem.storageUrl);
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const blob = await response.blob();
-            const fileName = fileItem.fileName || `image_${index}.jpg`;
-            const contentType =
-              blob.type || fileItem.contentType || "image/jpeg";
-
-            files[index] = new File([blob], fileName, { type: contentType });
-          } catch (error) {
-            console.error(
-              `파일 ${index} (${fileItem.fileName}) 다운로드 실패:`,
-              error
-            );
-            // 에러 발생 시 빈 파일 생성 (선택사항)
-            files[index] = new File(
-              [],
-              fileItem.fileName || `image_${index}.jpg`,
-              {
-                type: fileItem.contentType || "image/jpeg",
-              }
-            );
-          }
+          const response = await ImageApi.get(
+            `/api/files/${fileItem.fileId}`,
+            { responseType: "blob" }
+          );
+          const blob = response.data as Blob;
+          const fileName = fileItem.fileName || `image_${index}.jpg`;
+          const contentType = blob.type || fileItem.contentType || "image/jpeg";
+          files[index] = new File([blob], fileName, { type: contentType });
         })
       );
 
@@ -181,7 +165,10 @@ export default function UploadModal({
     };
 
     if (uploadedFiles.length > 0) {
-      downloadFiles();
+      downloadFiles().catch((error) => {
+        console.error("파일 다운로드 실패:", error);
+        toast.error("파일을 불러오는데 실패했습니다. 다시 시도해주세요.");
+      });
     }
   }, [uploadedFiles]);
 
